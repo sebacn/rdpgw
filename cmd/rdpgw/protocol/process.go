@@ -249,7 +249,7 @@ func (p *Processor) tunnelRequest(data []byte) (caps uint32, cookie string) {
 	return
 }
 
-func (p *Processor) tunnelResponse(errorCode int) []byte {
+func (p *Processor) tunnelResponse(errorCode uint32) []byte {
 	buf := new(bytes.Buffer)
 
 	binary.Write(buf, binary.LittleEndian, uint16(0))                                                                    // server version
