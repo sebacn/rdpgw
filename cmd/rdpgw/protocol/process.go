@@ -191,7 +191,7 @@ func (p *Processor) Process(ctx context.Context) error {
 // Creates a packet and is a response to a handshakeRequest request
 // HTTP_EXTENDED_AUTH_SSPI_NTLM is not supported in Linux
 // but could be in Windows. However, the NTLM protocol is insecure
-func (p *Processor) handshakeResponse(major byte, minor byte, caps uint16, errorCode int) []byte {
+func (p *Processor) handshakeResponse(major byte, minor byte, caps uint16, errorCode uint32) []byte {
 	buf := new(bytes.Buffer)
 	binary.Write(buf, binary.LittleEndian, uint32(errorCode)) // error_code
 	buf.Write([]byte{major, minor})
