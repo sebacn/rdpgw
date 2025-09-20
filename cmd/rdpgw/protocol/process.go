@@ -277,7 +277,7 @@ func (p *Processor) tunnelAuthRequest(data []byte) string {
 	return clientName
 }
 
-func (p *Processor) tunnelAuthResponse(errorCode int) []byte {
+func (p *Processor) tunnelAuthResponse(errorCode uint32) []byte {
 	buf := new(bytes.Buffer)
 
 	binary.Write(buf, binary.LittleEndian, uint32(errorCode))                                                                                // error code
