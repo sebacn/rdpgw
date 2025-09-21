@@ -317,7 +317,7 @@ func (p *Processor) channelRequest(data []byte) (server string, port uint16) {
 	return
 }
 
-func (p *Processor) channelResponse(errorCode int) []byte {
+func (p *Processor) channelResponse(errorCode uint32) []byte {
 	buf := new(bytes.Buffer)
 
 	binary.Write(buf, binary.LittleEndian, uint32(errorCode))                             // error code
@@ -336,7 +336,7 @@ func (p *Processor) channelResponse(errorCode int) []byte {
 	return createPacket(PKT_TYPE_CHANNEL_RESPONSE, buf.Bytes())
 }
 
-func (p *Processor) channelCloseResponse(errorCode int) []byte {
+func (p *Processor) channelCloseResponse(errorCode uint32) []byte {
 	buf := new(bytes.Buffer)
 
 	binary.Write(buf, binary.LittleEndian, uint32(errorCode))                             // error code
