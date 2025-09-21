@@ -355,7 +355,7 @@ func (p *Processor) channelCloseResponse(errorCode uint32) []byte {
 	return createPacket(PKT_TYPE_CLOSE_CHANNEL_RESPONSE, buf.Bytes())
 }
 
-func makeRedirectFlags(flags RedirectFlags) int {
+func makeRedirectFlags(flags RedirectFlags) uint32 {
 	var redir = 0
 
 	if flags.DisableAll {
