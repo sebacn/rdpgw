@@ -356,7 +356,7 @@ func (p *Processor) channelCloseResponse(errorCode uint32) []byte {
 }
 
 func makeRedirectFlags(flags RedirectFlags) uint32 {
-	var redir = 0
+	uint32 redir = 0
 
 	if flags.DisableAll {
 		return HTTP_TUNNEL_REDIR_DISABLE_ALL
