@@ -63,7 +63,7 @@ func (p *Processor) Process(ctx context.Context) error {
 					log.Printf("Handshake attempted while in wrong state %d != %d", p.state, SERVER_STATE_INITIALIZED)
 					msg := p.handshakeResponse(0x0, 0x0, 0, E_PROXY_INTERNALERROR)
 					p.tunnel.Write(msg)
-					return fmt.Errorf("%x: wrong state", E_PROXY_INTERNALERROR)
+					return fmt.Errorf("%x: wrong state", uint32(E_PROXY_INTERNALERROR))
 				}
 				major, minor, _, reqAuth := p.handshakeRequest(message.msg)
 				caps, err := p.matchAuth(reqAuth)
@@ -83,7 +83,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						p.state, SERVER_STATE_HANDSHAKE)
 					msg := p.tunnelResponse(E_PROXY_INTERNALERROR)
 					p.tunnel.Write(msg)
-					return fmt.Errorf("%x: PAA cookie rejected, wrong state", E_PROXY_INTERNALERROR)
+					return fmt.Errorf("%x: PAA cookie rejected, wrong state", uint32(E_PROXY_INTERNALERROR))
 				}
 				_, cookie := p.tunnelRequest(message.msg)
 				if p.gw.CheckPAACookie != nil {
@@ -91,7 +91,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						log.Printf("Invalid PAA cookie received from client %s", p.tunnel.User.GetAttribute(identity.AttrClientIp))
 						msg := p.tunnelResponse(E_PROXY_COOKIE_AUTHENTICATION_ACCESS_DENIED)
 						p.tunnel.Write(msg)
-						return fmt.Errorf("%x: invalid PAA cookie", E_PROXY_COOKIE_AUTHENTICATION_ACCESS_DENIED)
+						return fmt.Errorf("%x: invalid PAA cookie", uint32(E_PROXY_COOKIE_AUTHENTICATION_ACCESS_DENIED))
 					}
 				}
 				msg := p.tunnelResponse(ERROR_SUCCESS)
@@ -104,7 +104,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						p.state, SERVER_STATE_TUNNEL_CREATE)
 					msg := p.tunnelAuthResponse(E_PROXY_INTERNALERROR)
 					p.tunnel.Write(msg)
-					return fmt.Errorf("%x: Tunnel auth rejected, wrong state", E_PROXY_INTERNALERROR)
+					return fmt.Errorf("%x: Tunnel auth rejected, wrong state", uint32(E_PROXY_INTERNALERROR))
 				}
 				client := p.tunnelAuthRequest(message.msg)
 				if p.gw.CheckClientName != nil {
@@ -112,7 +112,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						log.Printf("Invalid client name: %s", client)
 						msg := p.tunnelAuthResponse(ERROR_ACCESS_DENIED)
 						p.tunnel.Write(msg)
-						return fmt.Errorf("%x: Tunnel auth rejected, invalid client name", ERROR_ACCESS_DENIED)
+						return fmt.Errorf("%x: Tunnel auth rejected, invalid client name", uint32(ERROR_ACCESS_DENIED))
 					}
 				}
 				msg := p.tunnelAuthResponse(ERROR_SUCCESS)
@@ -125,7 +125,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						p.state, SERVER_STATE_TUNNEL_AUTHORIZE)
 					msg := p.channelResponse(E_PROXY_INTERNALERROR)
 					p.tunnel.Write(msg)
-					return fmt.Errorf("%x: Channel create rejected, wrong state", E_PROXY_INTERNALERROR)
+					return fmt.Errorf("%x: Channel create rejected, wrong state", uint32(E_PROXY_INTERNALERROR))
 				}
 				server, port := p.channelRequest(message.msg)
 				host := net.JoinHostPort(server, strconv.Itoa(int(port)))
@@ -135,7 +135,7 @@ func (p *Processor) Process(ctx context.Context) error {
 						log.Printf("Not allowed to connect to %s by policy handler", host)
 						msg := p.channelResponse(E_PROXY_RAP_ACCESSDENIED)
 						p.tunnel.Write(msg)
-						return fmt.Errorf("%x: denied by security policy", E_PROXY_RAP_ACCESSDENIED)
+						return fmt.Errorf("%x: denied by security policy", uint32(E_PROXY_RAP_ACCESSDENIED))
 					}
 				}
 				log.Printf("Establishing connection to RDP server: %s", host)
