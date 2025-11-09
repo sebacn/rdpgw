@@ -37,6 +37,35 @@ var opts struct {
 
 var conf config.Configuration
 
+// logRequestMiddleware logs HTTP method, URL, headers, and cookies for each request.
+func logRequestMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("---- Incoming Request ----")
+		log.Printf("Time: %s", r.Header.Get("Date"))
+		log.Printf("Method: %s", r.Method)
+		log.Printf("URL: %s", r.URL.String())
+		log.Printf("RemoteAddr: %s", r.RemoteAddr)
+
+		log.Println("Headers:")
+		for name, values := range r.Header {
+			for _, value := range values {
+				log.Printf("  %s: %s", name, value)
+			}
+		}
+
+		if len(r.Cookies()) > 0 {
+			log.Println("Cookies:")
+			for _, cookie := range r.Cookies() {
+				log.Printf("  %s = %s", cookie.Name, cookie.Value)
+			}
+		}
+
+		log.Println("---------------------------")
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func initOIDC(callbackUrl *url.URL) *web.OIDC {
 	// set oidc config
 	provider, err := oidc.NewProvider(context.Background(), conf.OpenId.ProviderUrl)
@@ -203,6 +232,8 @@ func main() {
 	}
 
 	r := mux.NewRouter()
+
+	r.Use(logRequestMiddleware)
 
 	// ensure identity is set in context and get some extra info
 	r.Use(web.EnrichContext)
