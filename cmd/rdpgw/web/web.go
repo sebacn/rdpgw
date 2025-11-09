@@ -317,7 +317,7 @@ const fallbackHTMLTemplate = `<!DOCTYPE html>
         // Fallback minimal JavaScript
         let selectedServer = null;
         async function loadServers() {
-            const response = await fetch('/api/hosts');
+            const response = await fetch('/api/v1/hosts');
             const servers = await response.json();
             const grid = document.getElementById('serversGrid');
             servers.forEach(server => {
